@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <title>AHA IRC Presence</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/jquery.easing.1.3.js"></script>
+    <script type="text/javascript">
+     var global_incnum = 1; 
+ var pad_two = function(n) {
+        return (n < 10 ? '0' : '') + n;
+    };
+	
+	function treatName(name)
+	{
+		return name.replace(/[-|#.+\`'"]/, "")
+	}
+
+	function hour(hr, min)
+      {
+      	if (hr > 12)
+	{
+		return (hr - 12) + ":" + pad_two(min) + " PM"
+	}
+	else { return hr + ":" + pad_two(min) + " AM" }
+      }
+      function processDate(time) {
+		d = new Date(time)
+		d2 = new Date()
+		if (d2.getDate() != d.getDate())
+		{
+			return "Yesterday at " + hour(d.getHours(), d.getMinutes()) 
+		}
+		else return hour(d.getHours(), d.getMinutes())
+	}
+      function createName(name, time, loc){
+        var username = "";
+        username = 'user-' + global_incnum;
+	global_incnum++;
+        $("#usernames").append('<li><div class="time"><span class="location">'+loc + '</span> ' + processDate(time) + ' &dArr;</span></div><a class="username" id="' + username + '" href="#">' + name + '</a></li>');
+        $('#' + username).appearName();
+      }
+      $.fn.appearName = function() { 
+              $(this).show();
+              $(this).blur();
+              var method1 = 'easeOutBack';
+              var method2 = 'easeInBack';
+              $(this).animate(
+                {height: 69}, 
+                {duration: 500, easing: method1}
+              ).animate(
+                {height: 69},
+                {duration: 500, easing: method2}
+              );
+      }
+      function getFile() {
+        $.getJSON('http://babolog.com:8080/json', function(data) {
+          for(var key in data) {
+            createName(key, data[key][1], data[key][0]);
+	  }
+	});
+      }
+      function startLoop() {
+        
+        getFile();
+      }
+      $(document).ready(function(){
+        startLoop();
+        $("#new_user").submit(function(){
+          var username = $("#input-username").val();
+        });
+      });
+    </script>
+    <link href="/static/main.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>&lt;AllHands&gt;@ctive</h1>
+      <h3 class="physical-address">
+        Digital Ops<br/>
+        525 East Liberty<br/>
+        Ann Arbor, MI 48104<br/>
+      </h3>
+      <h3 class="channel-name">IRC: [#allhandsactive - irc.freenode.net]</h3>
+      <p>If you're in IRC, simply say <strong>@space</strong> to tell people you're at the space and <strong>@gone</strong> to tell people you're not at the space. Your position will expire after 24 hours.</p>
+      <h2>Who's where?</h3>
+      <div class="result">
+      </div>
+      <ul id="usernames">
+      </ul>
+      <!--
+      <form id="new_user">
+        <input type="text" id="input-username">
+        <input type="submit" value="submit">
+      </form>
+      -->
+    </div>
+  </body>
+</html>

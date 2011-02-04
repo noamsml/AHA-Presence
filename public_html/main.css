@@ -1,0 +1,77 @@
+html, body {
+  font-family: Helvetica, Arial, sans-serif;
+  background: #222;
+  color: #CCC;
+}
+strong {
+  font-size: 150%;
+  color: #fff;
+}
+.time { 
+/*    position: relative;
+    top: -20px;*/
+    font-size: 14px;
+    display: block;
+    position: relative;
+    top: 5px;
+    right: 38px;
+}
+
+.location
+{
+	font-size: 25px;
+	font-weight: bold;
+}
+
+#user-noamsml {
+  display: block;
+}
+
+#new_user input {
+  border: 4px solid #99FF00;
+  background: black;
+  color: white;
+  padding: 20px;
+  margin: 10px auto;
+  font-size: 200%;
+}
+
+#new_user input[type="text"] {
+  width: 65%;
+}
+#new_user input[type="submit"]:active {
+  background: #99ff00;
+  color: #000;
+}
+
+#usernames {
+  list-style-type: none; 
+}
+
+#usernames li {
+  
+}
+
+.container {
+  width: 500px;
+  background: #333;
+  padding: 20px;
+  margin: 40px auto;
+  border: 20px solid #9900FF;
+}
+
+.username {
+  display: none;
+  font-size: 40px;
+  color: #FF0099;
+  text-decoration: none;
+}
+
+h1, h3, h5 {
+  color: #0099ff;
+}
+
+h2, h4, h6 {
+  color: #ff9900;
+}
+

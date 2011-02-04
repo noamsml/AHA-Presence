@@ -3,6 +3,7 @@ event = require("events")
 http = require("http")
 fs = require("fs")
 mongo = require("mongodb/lib/mongodb")
+config = require("./config")
 
 mydir = "/home/noam/public_html/"
 checkins = Object()
@@ -15,7 +16,7 @@ checkins = Object()
 
 
 function getdb() {
-	return  new mongo.Db('ircbot', new mongo.Server("localhost", 27017))
+	return  new mongo.Db('ircbot', new mongo.Server(config.db_host, config.db_port))
 }
 
 function parse_data (line) {
@@ -136,15 +137,15 @@ handler = { handle : function (pline, conn) {
 				}
 				else if ((parse = /join (#[^ ]+)/i.exec(pline.args[1])))
 				{
-					if (parse[1] == "#allhandsactive") //HAHAHA
+					if (parse[1] == config.channel) //HAHAHA
 						conn.write("JOIN " + parse[1] + "\n");
 				}
 				break
 		}
 	},
 	onconn: function (conn) {
-		conn.write("NICK HeroBug\nUSER taft taft taft :Howard Taft\n");
-		conn.write("JOIN #botnoise\n");
+		conn.write("NICK " + config.nick + " \nUSER taft taft taft :Howard Taft\n");
+		conn.write("JOIN " + config.channel + "\n");
 	}
 }
 	
@@ -225,6 +226,7 @@ http.createServer(function (req, res) {
 	}
 					
 }).listen(8080, "");
-run_handler(handler, 6667, "irc.freenode.net");
+run_handler(handler, config.port, config.server);
+
 
 //run_handler(handler, 1234, "localhost");
