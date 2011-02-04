@@ -52,9 +52,10 @@
               );
       }
       function getFile() {
-        $.getJSON('http://babolog.com:8080/json', function(data) {
+        $.getJSON('/json', function(data) {
           for(var key in data) {
-            createName(key, data[key][1], data[key][0]);
+			value = data[key]
+            createName(value.name, value.date, value.location);
 	  }
 	});
       }

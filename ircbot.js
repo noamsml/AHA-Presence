@@ -5,7 +5,7 @@ fs = require("fs")
 mongo = require("mongodb/lib/mongodb")
 config = require("./config")
 
-mydir = "/home/noam/public_html/"
+
 checkins = Object()
 
 
@@ -200,14 +200,14 @@ http.createServer(function (req, res) {
 		else if (req.url == "/")
 		{
 		  res.writeHead(200, {'Content-Type': 'text/html'});
-		  res.end(fs.readFileSync(mydir + "index.html", "utf8"));
+		  res.end(fs.readFileSync(config.pubhtml_path + "index.html", "utf8"));
 		}
 		
 		else if ((parse = /static\/([^.][^ \/]*)/i.exec(req.url)))
 		{
 		  res.writeHead(200, {'Content-Type': 'text/html'});
 		  try {
-			res.end(fs.readFileSync(mydir + parse[1], "utf8"));
+			res.end(fs.readFileSync(config.pubhtml_path + parse[1], "utf8"));
 		  }
 		  catch (err) {
 			 res.end("404 NOT FOUND :(")
