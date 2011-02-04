@@ -124,13 +124,13 @@ handler = { handle : function (pline, conn) {
 					
 					
 				}
-				else if (/^@[^ @]+$|^2[^ @]+$/.test(pline.args[1]))
+				else if ((parse = /^([@|2][^ @<>&,.]+)+/.exec(pline.args[1])) != null)
 				{
 					var name = treatName(pline.from)
 					var db = getdb()
 					db.open( function(err,db) { db.collection("checkins", function(err, col) { 
 							col.update({ 'name' : name }, 
-								{'name': name, 'date' : Date(), 'location' : pline.args[1]}, {'upsert' :  true},
+								{'name': name, 'date' : new Date(), 'location' : parse[1]}, {'upsert' :  true},
 								function (err, none) {})
 						}) })
 				}
@@ -154,70 +154,76 @@ http.createServer(function (req, res) {
 	
 	  //TODO: Find a way to delete old ones
 	  var db=getdb();
-	  db.open( function(err, db)
-		{
-			console.log("1 alligator")
-			db.collection("checkins", function(err, col)
-			{	
-				console.log("2 alligator")
-				col.find({}, {'name':1, 'location':1, 'date':1}, function(err, cur)
-				{
-					console.log("3 alligator")
-					var checkins = cur.toArray(function(err, checkins) {
-					console.log("4 alligator")	
-					if (req.method == "GET") {
-						if (req.url == "/old")
-						{
-						  res.writeHead(200, {'Content-Type': 'text/html'});
-						  res.write("<html><head><title>@HA Presence!</title>")
-						  res.write("<link rel='stylesheet' href='http://khazaei.net/~noamsml/aha.css' />")
-						  res.write("</head><body>")
-						  res.write("<h1>@HA Presence!</h1><table><thead><td>Name</td><td>Last Checkin</td><td>At</td></thead>")
-						  for (var check in checkins)
-						  {
-							  res.write("<tr><td>"+check.name+"</td><td>"+ date_ish(new Date(check.date)) + "</td><td>" + check.location + "</td></tr>")
-						  }
-						  res.end("</table></body></html>")
-						}
-						else if (req.url == "/")
-						{
-						  res.writeHead(200, {'Content-Type': 'text/html'});
-						  res.end(fs.readFileSync(mydir + "index.html", "utf8"));
-						}
-						else if (req.url == "/json")
-						{
-						  res.writeHead(200, {'Content-Type': 'application/json'});
-						  res.end(JSON.stringify(checkins));
-						}
-						else if ((parse = /static\/([^.][^ \/]*)/i.exec(req.url)))
-						{
-						  res.writeHead(200, {'Content-Type': 'text/html'});
-						  try {
-							res.end(fs.readFileSync(mydir + parse[1], "utf8"));
-						  }
-						  catch (err) {
-							 res.end("404 NOT FOUND :(")
-						  }
-						}
-						else
-						{
-						  res.writeHead(404, {'Content-Type': 'text/plain'});
-						  res.end(":( NOOOO THEY BE REQUESTIN MAH WEBPAGE");
-						}
-					}
-					else
+	  if (req.method == "GET") {
+	  if (req.url == "/old" || req.url == "/json")
+	  {	  
+		  db.open( function(err, db)
+		  {
+				console.log("1 alligator")
+				db.collection("checkins", function(err, col)
+				{	
+					console.log("2 alligator")
+					var sdate = new Date((new Date()).getTime() - 1000 * 3600 * 6)
+					col.find({'date' : {'$gte' : sdate} }, {'sort' : 'location'}, function(err, cur)
 					{
-						res.writeHead(404, {'Content-Type': 'text/plain'});
-						res.end(":(");
-					}
-					
+						console.log("3 alligator")
+						var checkins = cur.toArray(function(err, checkins) {
+						console.log("4 alligator")	
+						
+							if (req.url == "/old")
+							{
+							  res.writeHead(200, {'Content-Type': 'text/html'});
+							  res.write("<html><head><title>@HA Presence!</title>")
+							  res.write("<link rel='stylesheet' href='http://khazaei.net/~noamsml/aha.css' />")
+							  res.write("</head><body>")
+							  res.write("<h1>@HA Presence!</h1><table><thead><td>Name</td><td>Last Checkin</td><td>At</td></thead>")
+							  for (var checknum in checkins)
+							  {
+								  var check = checkins[checknum]
+								  console.log(check)
+								  res.write("<tr><td>"+check.name+"</td><td>"+ date_ish(new Date(check.date)) + "</td><td>" + check.location + "</td></tr>")
+							  }
+							  res.end("</table></body></html>")
+							}
+							else if (req.url == "/json")
+							{
+							  res.writeHead(200, {'Content-Type': 'application/json'});
+							  res.end(JSON.stringify(checkins));
+							}
+						
+						})
 					})
 				})
-		})
-	})
-	  
-	  
-	
+			})
+		}
+		else if (req.url == "/")
+		{
+		  res.writeHead(200, {'Content-Type': 'text/html'});
+		  res.end(fs.readFileSync(mydir + "index.html", "utf8"));
+		}
+		
+		else if ((parse = /static\/([^.][^ \/]*)/i.exec(req.url)))
+		{
+		  res.writeHead(200, {'Content-Type': 'text/html'});
+		  try {
+			res.end(fs.readFileSync(mydir + parse[1], "utf8"));
+		  }
+		  catch (err) {
+			 res.end("404 NOT FOUND :(")
+		  }
+		}
+		else
+		{
+		  res.writeHead(404, {'Content-Type': 'text/plain'});
+		  res.end(":( NOOOO THEY BE REQUESTIN MAH WEBPAGE");
+		}
+	}
+	else
+	{
+		res.writeHead(404, {'Content-Type': 'text/plain'});
+		res.end(":(");
+	}
+					
 }).listen(8080, "");
 run_handler(handler, 6667, "irc.freenode.net");
 
