@@ -59,7 +59,7 @@ I'm so sorry.
       {
 		  var id = 'heading' + global_incnum;
 		  global_incnum++;
-		$("#locations").append('<li class="location" id="' +id+'"> <a class="username singleton" href="#">' + data.name + '</a>' + data.location.substring(0,15) +  '<span class="time singleton"> ' + processDate(data.date) + '</span></li>');
+		$("#locations").append('<li class="location" id="' +id+'">' + data.location.substring(0,15) +  ' <a class="username singleton" href="#">' + data.name + '</a><span class="time singleton"> ' + processDate(data.date) + '</span></li>');
 		//$('#' + id).appearName();
 	  }
 	  
