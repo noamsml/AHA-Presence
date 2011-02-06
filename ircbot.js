@@ -114,6 +114,7 @@ handler = { handle : function (pline, conn) {
 				conn.write("PONG :" + pline.args[0] + "\n");
 				break;
 			case "PRIVMSG":
+				pline.args[1] = pline.args[1].trim()
 				if (/^(@way|@gone)$/.test(pline.args[1]))
 				{
 					var name = treatName(pline.from)
