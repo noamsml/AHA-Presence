@@ -42,7 +42,7 @@ I'm so sorry.
         var username = "";
         username = 'user-' + global_incnum;
 		global_incnum++;
-        $('#' + list).append('<li><a class="username" id="' + username + '" href="#">' + name.substring(0,12) + '</a> <span class="time"> ' + processDate(time) + '</span></li>');
+        $('#' + list).append('<li><a class="username" id="' + username + '" href="#">' + name + '</a> <span class="time"> ' + processDate(time) + '</span></li>');
         //$('#' + username).appearName();
         
       }
@@ -50,7 +50,7 @@ I'm so sorry.
         var id = 'heading' + global_incnum;
         var id2 = 'ulist' + global_incnum+1;
 		global_incnum+=2;
-        $("#locations").append('<li class="location" id=' + id +' >'+loc.substring(0,12) + '<ul class="users" id="' + id2 +'"/></li>');
+        $("#locations").append('<li class="location" id=' + id +' >'+loc.substring(0,15) + '<ul class="users" id="' + id2 +'"/></li>');
         //$('#' + id).appearName();
         return id2;
       }
@@ -59,7 +59,7 @@ I'm so sorry.
       {
 		  var id = 'heading' + global_incnum;
 		  global_incnum++;
-		$("#locations").append('<li class="location" id="' +id+'"> <a class="username singleton" href="#">' + data.name.substring(0,12) + '</a>' + data.location.substring(0,12) +  '<span class="time singleton"> ' + processDate(data.date) + '</span></li>');
+		$("#locations").append('<li class="location" id="' +id+'"> <a class="username singleton" href="#">' + data.name + '</a>' + data.location.substring(0,15) +  '<span class="time singleton"> ' + processDate(data.date) + '</span></li>');
 		//$('#' + id).appearName();
 	  }
 	  
