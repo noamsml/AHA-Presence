@@ -31,19 +31,31 @@
 		}
 		else return hour(d.getHours(), d.getMinutes())
 	}
-      function createName(name, time){
+      function createName(list, name, time){
         var username = "";
         username = 'user-' + global_incnum;
 		global_incnum++;
-        $("#usernames").append('<li><div class="time">At ' + processDate(time) + ' &dArr;</div><a class="username" id="' + username + '" href="#">' + name + '</a></li>');
-        $('#' + username).appearName();
+        $('#' + list).append('<li><a class="username" id="' + username + '" href="#">' + name + '</a> <span class="time"> ' + processDate(time) + '</span></li>');
+        //$('#' + username).appearName();
+        
       }
       function createLoc(loc){
         var id = 'heading' + global_incnum;
-		global_incnum++;
-        $("#usernames").append('<li class="location" id=' + id +' >'+loc + '</li>');
-        $('#' + id).appearName();
+        var id2 = 'ulist' + global_incnum+1;
+		global_incnum+=2;
+        $("#locations").append('<li class="location" id=' + id +' >'+loc + '<ul class="users" id="' + id2 +'"/></li>');
+        //$('#' + id).appearName();
+        return id2;
       }
+      
+      function createSingleton(data)
+      {
+		  var id = 'heading' + global_incnum;
+		  global_incnum++;
+		$("#locations").append('<li class="location" id="' +id+'"> <a class="username singleton" href="#">' + data.name + '</a>' + data.location +  '<span class="time singleton"> ' + processDate(data.date) + '</span></li>');
+		//$('#' + id).appearName();
+	  }
+	  
       $.fn.appearName = function() { 
               $(this).show();
               $(this).blur();
@@ -60,16 +72,40 @@
       function getFile() {
         $.getJSON('/json', function(data) {
 		  var loc = ""
-		  var loclst = null
+		  // dumb as hell, but..
+		  var byloc = Object()
           for(var key in data) {
 			value = data[key]
-			if (value.location.toLowerCase() != loc)
+			if (value.location.toLowerCase() != loc.toLowerCase())
 			{
-				loc = value.location.toLowerCase();
-				createLoc(value.location);
+				loc = value.location
+				byloc[loc] = Array()
+				byloc[loc].push(value)
 			}
-            createName(value.name, value.date);
-	  }
+			else
+			{
+				byloc[loc].push(value)
+			}
+		}
+		
+		for (var location in byloc)
+		{
+			if (byloc[location].length == 1)
+			{
+
+				createSingleton(byloc[location][0])
+			}
+			else
+			{
+				var list = createLoc(location)
+				
+				for (var key in byloc[location])
+				{
+				
+					createName(list, byloc[location][key].name, byloc[location][key].date)
+				}
+			}
+		}
 	});
       }
       function startLoop() {
@@ -98,7 +134,7 @@
       <h2>Who's where?</h3>
       <div class="result">
       </div>
-      <ul id="usernames">
+      <ul id="locations">
       </ul>
       <!--
       <form id="new_user">
