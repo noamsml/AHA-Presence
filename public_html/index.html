@@ -31,12 +31,18 @@
 		}
 		else return hour(d.getHours(), d.getMinutes())
 	}
-      function createName(name, time, loc){
+      function createName(name, time){
         var username = "";
         username = 'user-' + global_incnum;
-	global_incnum++;
-        $("#usernames").append('<li><div class="time"><span class="location">'+loc + '</span> ' + processDate(time) + ' &dArr;</span></div><a class="username" id="' + username + '" href="#">' + name + '</a></li>');
+		global_incnum++;
+        $("#usernames").append('<li><div class="time">At ' + processDate(time) + ' &dArr;</div><a class="username" id="' + username + '" href="#">' + name + '</a></li>');
         $('#' + username).appearName();
+      }
+      function createLoc(loc){
+        var id = 'heading' + global_incnum;
+		global_incnum++;
+        $("#usernames").append('<li class="location" id=' + id +' >'+loc + '</li>');
+        $('#' + id).appearName();
       }
       $.fn.appearName = function() { 
               $(this).show();
@@ -53,9 +59,16 @@
       }
       function getFile() {
         $.getJSON('/json', function(data) {
+		  var loc = ""
+		  var loclst = null
           for(var key in data) {
 			value = data[key]
-            createName(value.name, value.date, value.location);
+			if (value.location.toLowerCase() != loc)
+			{
+				loc = value.location.toLowerCase();
+				createLoc(value.location);
+			}
+            createName(value.name, value.date);
 	  }
 	});
       }
