@@ -1,3 +1,10 @@
+<! -- This code is horribly hacked together.
+
+I'm so sorry.
+-Noam
+
+-->
+
 <html>
   <head>
     <title>AHA IRC Presence</title>
@@ -35,7 +42,7 @@
         var username = "";
         username = 'user-' + global_incnum;
 		global_incnum++;
-        $('#' + list).append('<li><a class="username" id="' + username + '" href="#">' + name + '</a> <span class="time"> ' + processDate(time) + '</span></li>');
+        $('#' + list).append('<li><a class="username" id="' + username + '" href="#">' + name.substring(0,12) + '</a> <span class="time"> ' + processDate(time) + '</span></li>');
         //$('#' + username).appearName();
         
       }
@@ -52,7 +59,7 @@
       {
 		  var id = 'heading' + global_incnum;
 		  global_incnum++;
-		$("#locations").append('<li class="location" id="' +id+'"> <a class="username singleton" href="#">' + data.name + '</a>' + data.location +  '<span class="time singleton"> ' + processDate(data.date) + '</span></li>');
+		$("#locations").append('<li class="location" id="' +id+'"> <a class="username singleton" href="#">' + data.name.substring(0,12) + '</a>' + data.location +  '<span class="time singleton"> ' + processDate(data.date) + '</span></li>');
 		//$('#' + id).appearName();
 	  }
 	  
