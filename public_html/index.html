@@ -23,10 +23,11 @@ I'm so sorry.
 
 	function hour(hr, min)
       {
-      	if (hr >= 12)
+      	if (hr > 12)
 	{
 		return (hr - 12) + ":" + pad_two(min) + " PM"
 	}
+	else if (hr == 12) return "12:" + pad_two(min) + " PM"
 	else { return hr + ":" + pad_two(min) + " AM" }
       }
       function processDate(time) {
