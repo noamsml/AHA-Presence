@@ -28,6 +28,7 @@ I'm so sorry.
 		return (hr - 12) + ":" + pad_two(min) + " PM"
 	}
 	else if (hr == 12) return "12:" + pad_two(min) + " PM"
+	else if (hr == 24) return "12:" + pad_two(min) + " AM"
 	else { return hr + ":" + pad_two(min) + " AM" }
       }
       function processDate(time) {
