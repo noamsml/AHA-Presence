@@ -58,6 +58,15 @@ display:block;
   text-decoration: none;
 }
 
+.msg
+{
+	font-size: 12pt;
+	color: #ccc;
+	margin-left: 25px;
+	border-left: #888 3px solid;
+	padding-left: 10px;
+}
+
 h1, h3, h5 {
   color: #0099ff;
 }

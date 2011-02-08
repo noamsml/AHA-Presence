@@ -126,13 +126,16 @@ handler = { handle : function (pline, conn) {
 					
 					
 				}
-				else if ((parse = /^([@|2][a-zA-Z][^ @<>&,.]*)/.exec(pline.args[1])) != null)
+				else if ((parse = /^([@][^ @<>&,.!]*) *(.*)/.exec(pline.args[1])) != null)
 				{
 					var name = treatName(pline.from)
 					var db = getdb()
+					var obj = {'name': name, 'date' : new Date(), 'location' : parse[1]}
+					var checkmsg = parse[2].trim().replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")
+					if (checkmsg != "") obj.checkmsg = checkmsg
 					db.open( function(err,db) { db.collection("checkins", function(err, col) { 
 							col.update({ 'name' : name }, 
-								{'name': name, 'date' : new Date(), 'location' : parse[1]}, {'upsert' :  true},
+								obj , {'upsert' :  true},
 								function (err, none) {})
 						}) })
 				}

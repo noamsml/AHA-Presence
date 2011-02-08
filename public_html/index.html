@@ -40,17 +40,24 @@ I'm so sorry.
 		}
 		else return hour(d.getHours(), d.getMinutes())
 	}
-      function createName(list, name, time){
+      function createName(list, data){
         var username = "";
         username = 'user-' + global_incnum;
+        
+        var myhtml  = '<li><a class="username" id="' + username + '" href="#">' + data.name + 
+        '</a> <span class="time"> ' + processDate(data.date) + '</span>'
+        if (data.checkmsg) myhtml += '<div class="msg">' + data.checkmsg + '</div>';
+        myhtml += '</li>'
+        
 		global_incnum++;
-        $('#' + list).append('<li><a class="username" id="' + username + '" href="#">' + name + '</a> <span class="time"> ' + processDate(time) + '</span></li>');
+        $('#' + list).append(myhtml);
         //$('#' + username).appearName();
         
       }
       function createLoc(loc){
         var id = 'heading' + global_incnum;
         var id2 = 'ulist' + global_incnum+1;
+        
 		global_incnum+=2;
         $("#locations").append('<li class="location" id=' + id +' >'+loc.substring(0,15) + '<ul class="users" id="' + id2 +'"/></li>');
         //$('#' + id).appearName();
@@ -61,7 +68,13 @@ I'm so sorry.
       {
 		  var id = 'heading' + global_incnum;
 		  global_incnum++;
-		$("#locations").append('<li class="location" id="' +id+'">' + data.location.substring(0,15) +  ' <a class="username singleton" href="#">' + data.name + '</a><span class="time singleton"> ' + processDate(data.date) + '</span></li>');
+		  
+		  var myhtml = '<li class="location" id="' +id+'">' + data.location.substring(0,15) +  
+		  ' <a class="username singleton" href="#">' + data.name + '</a><span class="time singleton"> ' + processDate(data.date) + '</span>';
+		  if (data.checkmsg) myhtml += '<div class="msg">' + data.checkmsg + '</div>';
+		  myhtml += '</li>'
+		  
+		$("#locations").append(myhtml);
 		//$('#' + id).appearName();
 	  }
 	  
@@ -111,7 +124,7 @@ I'm so sorry.
 				for (var key in byloc[location])
 				{
 				
-					createName(list, byloc[location][key].name, byloc[location][key].date)
+					createName(list, byloc[location][key])
 				}
 			}
 		}
