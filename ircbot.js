@@ -131,7 +131,7 @@ handler = { handle : function (pline, conn) {
 					var name = treatName(pline.from)
 					var db = getdb()
 					var obj = {'name': name, 'date' : new Date(), 'location' : parse[1]}
-					var checkmsg = parse[2].trim().replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")
+					var checkmsg = parse[2].trim().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
 					if (checkmsg != "") obj.checkmsg = checkmsg
 					db.open( function(err,db) { db.collection("checkins", function(err, col) { 
 							col.update({ 'name' : name }, 
