@@ -126,7 +126,7 @@ handler = { handle : function (pline, conn) {
 					
 					
 				}
-				else if ((parse = /^([@][^ @<>&,.!]*) *(.*)/.exec(pline.args[1])) != null)
+				else if ((parse = /^([@][^ @<>&,.!]*|[@][A-Za-z][^ @<>&,.!]+) *(.*)/.exec(pline.args[1])) != null)
 				{
 					var name = treatName(pline.from)
 					var db = getdb()
