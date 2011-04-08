@@ -229,7 +229,7 @@ http.createServer(function (req, res) {
 		res.end(":(");
 	}
 					
-}).listen(8080, "");
+}).listen(config.httport, "");
 run_handler(handler, config.port, config.server);
 
 
