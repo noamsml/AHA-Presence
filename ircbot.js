@@ -6,6 +6,11 @@ mongo = require("mongodb/lib/mongodb")
 config = require("./config")
 
 
+if (typeof(config.channel) == "string")
+{
+	config.channel = [config.channel];
+}
+
 checkins = Object()
 
 
@@ -141,15 +146,17 @@ handler = { handle : function (pline, conn) {
 				}
 				else if ((parse = /join (#[^ ]+)/i.exec(pline.args[1])))
 				{
-					if (parse[1] == config.channel) //HAHAHA
+					if (parse[1].indexOf(config.channel) != -1)
 						conn.write("JOIN " + parse[1] + "\n");
 				}
 				break
 		}
 	},
 	onconn: function (conn) {
+		
 		conn.write("NICK " + config.nick + " \nUSER taft taft taft :Howard Taft\n");
-		conn.write("JOIN " + config.channel + "\n");
+		for (c in config.channel)
+			conn.write("JOIN " + config.channel[c] + "\n");
 	}
 }
 	
