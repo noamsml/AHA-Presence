@@ -102,6 +102,9 @@ function run_handler(obj,port, host)
 	);
 	conn.sock.on("connect", function(sock) { obj.onconn(conn); });
 	conn.connect(port, host);
+	conn.sock.on("disconnect", function(sock) {
+		conn.connect(port, host)
+	})
 }
 
  var pad_two = function(n) {
